@@ -3,10 +3,10 @@ A GUI app with two thread-animated trains that follow their rail's path and (kin
 
 # That was the second project of the Discipline Concurrent Programming, so I've developed some skills:
 
-Dealing with threads and learnign how to animate using them.
-Dealing with multithread (concurrency) problems.
+<text>Dealing with threads and learnign how to animate using them.<br/>
+Dealing with multithread (concurrency) problems.<br/>
 
 # How to play:
-Go to root directory and type the following command lines:
-$ javac Principal.java
-$ java Principal
+Go to root directory and type the following command lines:<br/>
+$ javac Principal.java<br/>
+$ java Principal<br/>
