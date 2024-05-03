@@ -2,7 +2,7 @@
 * Autor: Icaro Medeiros Lobo                                      *
 * Matricula: 202310130                                            *
 * Data Inicio: 27.03.2024                                         *
-* Data Ultima Alteracao: 27.03.2024                               *
+* Data Ultima Alteracao: 30.04.2024                               *
 * Nome programa: Trabalho 01                                      *
 * Funcao codigo: Configura botao para resetar o movimento e       * 
 * a posicao dos trens                                             *
@@ -58,4 +58,4 @@ public class BotaoReset extends Button {
     trens[0].resetTrem();
     trens[1].resetTrem();
   } // fim reset
-}
+} // fim da classe

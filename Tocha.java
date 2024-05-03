@@ -2,7 +2,7 @@
 * Autor: Icaro Medeiros Lobo                                      *
 * Matricula: 202310130                                            *
 * Data Inicio: 26.03.2024                                         *
-* Data Ultima Alteracao: 27.03.2024                               *
+* Data Ultima Alteracao: 30.04.2024                               *
 * Nome programa: Trabalho 01                                      *
 * Funcao codigo: Cria botoes com formato de tocha que sao         *
 * responsaveis por alterar a posicao inicial do trem e seu padrao *
@@ -45,7 +45,7 @@ public class Tocha extends ImageView {
       } // fim do handle
     });
 
-// altera cursor para mao quando entra no botao
+    // altera cursor para mao quando entra no botao
     botao.setOnMouseEntered(new EventHandler<MouseEvent>() {
       public void handle(MouseEvent me){
         scene.setCursor(Cursor.HAND);      
@@ -58,7 +58,6 @@ public class Tocha extends ImageView {
         scene.setCursor(Cursor.DEFAULT);      
       }
     });
-
 
   } //  fim do construtor
 

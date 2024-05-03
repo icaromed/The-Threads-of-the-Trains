@@ -2,7 +2,7 @@
 * Autor: Icaro Medeiros Lobo                                      *
 * Matricula: 202310130                                            *
 * Data Inicio: 20.03.2024                                         *
-* Data Ultima Alteracao: 29.04.2024                               *
+* Data Ultima Alteracao: 30.04.2024                               *
 * Nome programa: Trem                                             *
 * Funcao codigo: Modela a classe do trem                          *
 **************************************************************** */
@@ -21,23 +21,31 @@ public class Trem extends Thread {
   private double velocidadePadrao = 3;
   boolean esquerda;
   boolean cima;
-  //top left (-70, -320)
-  //top right (60, -320)
-  //bot left (-70, +340)
-  //bot right (60, +340)
+  Trem outroTrem;
+  int critico;
+    // critico = 0 (nao esta em zona critica)
+    // critico = 1 (esta na primeira curva)
+    // critico = 2 (esta na segunda curva)
+ 
+  /* some important coordenates:
+  top left (-70, -320)
+  top right (60, -320)
+  bot left (-70, +340)
+  bot right (60, +340) */
   
   public Trem(boolean esquerda, boolean cima, Text velocimetro) {
     img = new ImageView(); // construtor do ImageView
     Image imagemTrem = new Image("img/trem.png"); // carrega imagem do rem
     img.setImage(imagemTrem); // adiciona imagem ao trem
-    this.esquerda = esquerda;
-    this.cima = cima;
-    definePosicaoInicial();
+    this.esquerda = esquerda; // direita ou esquerda
+    this.cima = cima; // em cima ou embaixo
+    definePosicaoInicial(); // seleciona as coordenadas (x,y)
     img.setFitHeight(50); // altura do trem
     img.setFitWidth(50); // largura do trem
     velocidade = velocidadePadrao;
     posicaoInicial(); // move o trem para a posicao inicial
     this.velocimetro = velocimetro;
+
   } // fim do construtor
  
   /* ****************************************************************
@@ -48,17 +56,43 @@ public class Trem extends Thread {
   * Saida: nenhuma                                                  *
   **************************************************************** */ 
   public void run() {
-    while(true) {   
+    while(true) {
+        
       Platform.runLater(() -> {
-        moveThread();
+        moveThread(); // movimenta trem e faz animacoes
+	zonaCritica(); // atualiza a zona critica
       });
 
-    try {
+      // "freia" a taxa de atualizacao das threads
+      try {
         this.sleep(10);
       } catch (InterruptedException e) {}
     }
   } // fim do run
-  
+ 
+  /* ****************************************************************
+  * Metodo: zonaCritica                                             *
+  * Funcao: atualiza a informacao do estado critico de cada trem    *
+  * Parametros: nenhum                                              *
+  * Saida: nenhuma                                                  *
+  **************************************************************** */   
+  public void zonaCritica() {
+    if(img.getTranslateY() > -280 && img.getTranslateY() < -40) {
+      // o trem esta na primeira zona critica
+      if(getOutroTrem().getCritico() != 1){
+        setCritico(1); 
+      }
+    } else if (img.getTranslateY() > 40 && img.getTranslateY() < 270) {
+      // o trem esta na segunda zona critica
+      if(getOutroTrem().getCritico() != 2){
+        setCritico(2); 
+      }
+    } else {
+      // o trem nao esta na zona critica
+      setCritico(0);
+    }
+  }
+
   /* ****************************************************************
   * Metodo: moveThread                                              *
   * Funcao: move o trem e atualiza o velocimetro uma vez            *
@@ -116,25 +150,51 @@ public class Trem extends Thread {
     if(esquerda){ // o trem inicia na esquerda
       
       if(cima){ // o trem inicia em cima
-        movePrincipal();
+        if(img.getTranslateY() >= -210 && img.getTranslateY() <= -125 && getOutroTrem().getCritico() == 1) {
+          return;
+	}
+	if(img.getTranslateY() >= 120 && img.getTranslateY() <= 200 && getOutroTrem().getCritico() == 2) {
+          return;
+	}       
+       
+	movePrincipal();
         moveParaBaixo();
       } else { // o trem inicia embaixo
-        moveSecundaria();
+        if(img.getTranslateY() >= -210 && img.getTranslateY() <= -125 && getOutroTrem().getCritico() == 1) {
+          return;
+	}
+	if(img.getTranslateY() >= 120 && img.getTranslateY() <= 200 && getOutroTrem().getCritico() == 2) {
+          return;
+	}
+	
+	moveSecundaria();
         moveParaCima();
       } // fim do if topo
     
     } else { // o trem inicia na direita
       
       if(cima){ // o trem inicia em cima
+        if(img.getTranslateY() >= -210 && img.getTranslateY() <= -125 && getOutroTrem().getCritico() == 1) {
+          return;
+	}
+	if(img.getTranslateY() >= 120 && img.getTranslateY() <= 200 && getOutroTrem().getCritico() == 2) {
+          return;
+	}
+
         moveSecundaria();
         moveParaBaixo();
       } else { // o trem inicia embaixo
+        if(img.getTranslateY() >= -210 && img.getTranslateY() <= -125 && getOutroTrem().getCritico() == 1) {
+          return;
+	}
+	if(img.getTranslateY() >= 120 && img.getTranslateY() <= 200 && getOutroTrem().getCritico() == 2) {
+          return;
+	}
+
         movePrincipal();
         moveParaCima();
       } // fim do else cima
-    
     } // fim do else esquerda
-  
   } // fim do move
 
   /* ****************************************************************
@@ -196,6 +256,13 @@ public class Trem extends Thread {
   * Saida: nenhuma                                                  *
   **************************************************************** */
   public void moveParaBaixo() {
+    // zona critica
+    // if(img.getTranslateY() >= -280 && img.getTranslateY() <= -275) {
+    // }
+    //while(img.getTranslateY() == 40 && getOutroTrem().getCritico() == 2) {
+    //  setCritico(0);
+    //}
+
     if(img.getTranslateY() > 340){
       posicaoInicial(); // faz o looping
     }
@@ -209,12 +276,18 @@ public class Trem extends Thread {
   * Saida: nenhuma                                                  *
   **************************************************************** */
   public void moveParaCima() {
+    // zona critica
+    // while(img.getTranslateY() == -40 && getOutroTrem().getCritico() == 1){}
+    // while(img.getTranslateY() == 270 && getOutroTrem().getCritico() == 2){}
+
     if(img.getTranslateY() < -320){
       posicaoInicial(); // faz o looping
     }
     img.setTranslateY(img.getTranslateY() - velocidade); // anda para cima
   } // fim do moveParaCima
+
   
+
   /* ****************************************************************
   * Metodo: reset                                                   *
   * Funcao: reinicia a posicao e velocidade dos trens               *
@@ -277,6 +350,46 @@ public class Trem extends Thread {
   } // fim do setVelocidade
  
   /* ****************************************************************
+  * Metodo: getCritico                                              *
+  * Funcao: retorna valor do estado critico                         *
+  * Parametros: nenhum                                              *
+  * Saida: int que reprenseta valor do estado critico               *
+  **************************************************************** */  
+  public int getCritico() {
+    return critico;
+  } // fim do getCritico
+
+  /* ****************************************************************
+  * Metodo: setCritico                                              *
+  * Funcao: atualiza valor do estado critico                        *
+  * Parametros: valor int que representa novo estado critico        *
+  * Saida: nenhuma                                                  *
+  **************************************************************** */   
+  public void setCritico(int critico) { 
+    this.critico = critico;
+  } // fim do setCritico
+
+  /* ****************************************************************
+  * Metodo: getOutroTrem                                            *
+  * Funcao: retorna referencia ao outro trem                        *
+  * Parametros: nenhum                                              *
+  * Saida: objeto do tipo trem, em trilho concorrente               *
+  **************************************************************** */   
+  public Trem getOutroTrem() { 
+    return outroTrem;
+  } // fim do getOutroTrem
+ 
+  /* ****************************************************************
+  * Metodo: setOutroTrem                                            *
+  * Funcao: atualiza referencia ao outro trem                       *
+  * Parametros: objeto do tipo Trem, em trilho concorrente          *
+  * Saida: nenhuma                                                  *
+  **************************************************************** */   
+  public void setOutroTrem(Trem outroTrem) { 
+    this.outroTrem = outroTrem;
+  } // fim do setOutroTrem
+ 
+  /* ****************************************************************
   * Metodo: getImg                                                  *
   * Funcao: retorna objeto ImageView do trem                        *
   * Parametros: nenhum                                              *
@@ -296,6 +409,10 @@ public class Trem extends Thread {
   public static void criaTrens(Trem[] trens, Text velocimetro1, Text velocimetro2) {
     trens[0] = new Trem(true, true, velocimetro1); // cria o primeiro trem na posicao esquerda-cima
     trens[1] = new Trem(false, true, velocimetro2); // cria o segundo trem na posicao direita-cima
+	
+    // conta para cada trem onde esta o seu trem concorrente  
+    trens[0].setOutroTrem(trens[1]);			      
+    trens[1].setOutroTrem(trens[0]);			  
 
   } // fim do criaTrens
 } // fim do Trem

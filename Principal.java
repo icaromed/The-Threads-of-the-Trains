@@ -2,7 +2,7 @@
 * Autor: Icaro Medeiros Lobo                                      *
 * Matricula: 202310130                                            *
 * Data Inicio: 13.03.2024                                         *
-* Data Ultima Alteracao: 29.04.2024                               *
+* Data Ultima Alteracao: 30.04.2024                               *
 * Nome programa: Trabalho 01                                      *
 * Funcao codigo: Cria e renderiza a parte visual do programa      * 
 * alem de controlar e criar os objetos dos elementos graficos     *
@@ -48,14 +48,13 @@ public class Principal extends Application {
     BotaoVelocidade.criaBotoes(botoesVelocidade, trens); // cria botoes de velocidade
     ajustaVelocimetros();
     
-
+    // anima os trens e o velocimetro
     trens[0].start(); // inicia movimento do primeiro trem
     trens[1].start(); // inicia movimento do segundo trem
-
     stage.setOnCloseRequest(event -> paraThreads(trens[0], trens[1])); // ao clicar em sair, para as threads
 
+    // renderiza elementos
     renderizar(layout, botaoReset); // renderiza os elementos visuais  
-  
     stage.show(); // renderiza elementos do palco			   
   } // fim do start
 
